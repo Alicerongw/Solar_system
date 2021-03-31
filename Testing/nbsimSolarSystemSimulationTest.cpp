@@ -47,7 +47,23 @@ TEST_CASE( "Test for acceleration", "[some group identifier]" ) {
     }
 
 
+    SECTION("Check particle movement when there is fictitious centripetal acceleration"){
 
+        // create an instance of Particle class
+        nbsim::Particle particle(position,velocity);
+
+        // after stepping through 2𝜋 worth of time (number of steps * step length)
+        for(int i = 1; i <=1000; i++){
+
+            particle.integrateTimeStep(-particle.getPostion(), 2*M_PI/1000);
+
+        }
+
+ 
+        REQUIRE(particle.getPostion().isApprox(position,0.01));
+        REQUIRE(particle.getVelocity().isApprox(velocity,0.01));
+
+    }
 
 
 }
