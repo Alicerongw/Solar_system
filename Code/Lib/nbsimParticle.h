@@ -13,11 +13,11 @@ namespace nbsim
         public:
             Particle(Eigen::Vector3d Position, Eigen::Vector3d Velocity);
             ~Particle();
-            Eigen::Vector3d getPostion() const;
+            Eigen::Vector3d getPosition() const;
             Eigen::Vector3d getVelocity() const;
             void integrateTimeStep(Eigen::Vector3d acceleration, double timestep);
 
-        private:
+        protected:
             Eigen::Vector3d Position_;
             Eigen::Vector3d Velocity_;
 

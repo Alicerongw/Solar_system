@@ -13,7 +13,7 @@ namespace nbsim{
 
     Particle::~Particle(){}
 
-    Eigen::Vector3d Particle::getPostion() const{
+    Eigen::Vector3d Particle::getPosition() const{
 
         return Position_;
 
@@ -24,8 +24,8 @@ namespace nbsim{
         return Velocity_;
 
     }
-            
-            
+
+                        
     void Particle::integrateTimeStep(Eigen::Vector3d acceleration, double timestep){
 
         Eigen::Vector3d Velocity_ini = Velocity_;

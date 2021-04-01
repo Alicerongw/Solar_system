@@ -59,12 +59,10 @@ TEST_CASE( "Test for acceleration", "[some group identifier]" ) {
 
         }
 
- 
         REQUIRE(particle.getPostion().isApprox(position,0.01));
         REQUIRE(particle.getVelocity().isApprox(velocity,0.01));
 
     }
-
 
 }
 
