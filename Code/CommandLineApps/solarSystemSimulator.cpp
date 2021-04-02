@@ -18,6 +18,29 @@ void Print2Screen(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPla
 }
 
 
+double CenterofMass(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
+
+    Eigen::Vector3d r_com;
+    Eigen::Vector3d nominator(0.0,0.0,0.0);
+    double denominator = 0.0;
+
+    for(int i = 0; i < 9; i++){
+
+        nominator = nominator + (ListofPlanets[i]->getMu()) * (ListofPlanets[i]->getPosition());
+        denominator = denominator + ListofPlanets[i]->getMu();
+    }
+
+    r_com = nominator/denominator;
+
+    std::cout<<"The centre of mass vector of the system is: ("<<r_com[0]<<","<<r_com[1]<<","<<r_com[2]<<")"<<std::endl;
+
+    return sqrt(r_com.dot(r_com));
+
+}
+
+
+
+
 int main(int argc, char **argv) {
     
 	CLI::App app{"Model the motion of Sun and planets in the Solar System"};
