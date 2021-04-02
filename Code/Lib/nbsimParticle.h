@@ -1,9 +1,9 @@
 #ifndef nbsimParticle_h
 #define nbsimParticle_h
 
-#include <Eigen/Dense>
-#include "nbsimWin32ExportHeader.h"
 
+#include "nbsimWin32ExportHeader.h"
+#include <Eigen/Dense>
 
 namespace nbsim
 {

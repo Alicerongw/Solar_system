@@ -1,12 +1,10 @@
 #ifndef nbsimMassiveParticel_h
 #define nbsimMassiveParticle_h
 
+#include "nbsimWin32ExportHeader.h"
 #include "nbsimParticle.h"
-#include <Eigen/Dense>
 #include <memory>
 #include <vector>
-#include "nbsimWin32ExportHeader.h"
-
 
 namespace nbsim
 {
@@ -24,12 +22,10 @@ namespace nbsim
             void integrateTimestep(const double& timestep);
 
         private:
-            double Mass_;
+            double Mu_;
             Eigen::Vector3d Acceleration_;
             std::vector<std::shared_ptr<MassiveParticle>> ListofParticles;
             
-
-
     };
 
 

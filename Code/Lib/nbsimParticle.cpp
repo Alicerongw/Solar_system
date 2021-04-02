@@ -1,5 +1,4 @@
 #include "nbsimParticle.h"
-#include <iostream>
 
 namespace nbsim{
 

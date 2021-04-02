@@ -79,7 +79,7 @@ TEST_CASE( "Test for acceleration of MassiveParticle", "[some group identifier]"
     SECTION("check single MassiveParticle with no attractors will travel with a constant velocity"){
 
         // create an intance of MassiveParticle class
-        std::shared_ptr<nbsim::MassiveParticle> M_Particle1(new nbsim::MassiveParticle(position1,velocity1,1/gravitational_constant));
+        std::shared_ptr<nbsim::MassiveParticle> M_Particle1(new nbsim::MassiveParticle(position1,velocity1,1));
 
         M_Particle1->calculateAcceleration();
         M_Particle1->integrateTimestep(5.0);
@@ -91,8 +91,8 @@ TEST_CASE( "Test for acceleration of MassiveParticle", "[some group identifier]"
     SECTION("check two MassiveParticles which gravitationally attracts each other"){
 
         // create two intances of MassiveParticle class
-        std::shared_ptr<nbsim::MassiveParticle> M_Particle1(new nbsim::MassiveParticle(position1,velocity1,1/gravitational_constant));
-        std::shared_ptr<nbsim::MassiveParticle> M_Particle2(new nbsim::MassiveParticle(position2,velocity2,1/gravitational_constant));
+        std::shared_ptr<nbsim::MassiveParticle> M_Particle1(new nbsim::MassiveParticle(position1,velocity1,1.0));
+        std::shared_ptr<nbsim::MassiveParticle> M_Particle2(new nbsim::MassiveParticle(position2,velocity2,1.0));
 
 
         M_Particle1->addAttractor(M_Particle2);
@@ -103,15 +103,14 @@ TEST_CASE( "Test for acceleration of MassiveParticle", "[some group identifier]"
             M_Particle1->calculateAcceleration();
             M_Particle2->calculateAcceleration();
 
-            M_Particle1->integrateTimestep(2*M_PI/1000);
-            M_Particle2->integrateTimestep(2*M_PI/1000);
+            M_Particle1->integrateTimestep(4*M_PI/1000);
+            M_Particle2->integrateTimestep(4*M_PI/1000);
+            
         }
 
         double distance = sqrt((M_Particle1->getPosition() - M_Particle2->getPosition()).dot(M_Particle1->getPosition() - M_Particle2->getPosition()));
-        std::cout<<M_Particle1->getPosition()<<std::endl;
-        std::cout<<M_Particle2->getPosition()<<std::endl;
-        std::cout<<distance<<std::endl;
-        REQUIRE(distance == Approx(2.0).margin(0.01));
+
+        REQUIRE(distance == Approx(2.0).margin(0.1));
 
     }
 
