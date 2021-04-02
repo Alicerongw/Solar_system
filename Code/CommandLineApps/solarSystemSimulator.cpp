@@ -3,7 +3,7 @@
 #include "nbsimSolarSystemData.ipp"
 #include <iostream>
 
-
+// help function to add appropriate messages to screen summarising the position of the solar system bodies
 void Print2Screen(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
 
     for(int i = 0; i < 9; i++){
@@ -18,6 +18,7 @@ void Print2Screen(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPla
 }
 
 
+// function to output centre of mass vector of the system to screen as the simulation evolves
 double CenterofMass(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
 
     Eigen::Vector3d r_com;
@@ -39,8 +40,25 @@ double CenterofMass(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofP
 }
 
 
+// function to output total linear momentum vector the system to screen as the simulation evolves
+double LinearMomentum(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
+
+    Eigen::Vector3d p_total;
+
+    for(int i = 0; i < 9; i++){
+
+        p_total = p_total + (ListofPlanets[i]->getMu())*(ListofPlanets[i]->getVelocity());
+
+    }
+
+    std::cout<<"The total linear momentum vector of the system is: ("<<p_total[0]<<","<<p_total[1]<<","<<p_total[2]<<")"<<std::endl;
+    
+    return sqrt(p_total.dot(p_total));
+
+}
 
 
+// command line app
 int main(int argc, char **argv) {
     
 	CLI::App app{"Model the motion of Sun and planets in the Solar System"};
