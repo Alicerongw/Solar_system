@@ -14,7 +14,7 @@ namespace nbsim
     class MassiveParticle: public Particle{
 
         public:
-            MassiveParticle(Eigen::Vector3d Position, Eigen::Vector3d Velocity, Eigen::Vector3d Acceleration, double Mass);
+            MassiveParticle(Eigen::Vector3d Position, Eigen::Vector3d Velocity, double Mass);
             ~MassiveParticle();
             
             double getMu();
@@ -24,8 +24,8 @@ namespace nbsim
             void integrateTimestep(const double& timestep);
 
         private:
-            Eigen::Vector3d Acceleration_;
             double Mass_;
+            Eigen::Vector3d Acceleration_;
             std::vector<std::shared_ptr<MassiveParticle>> ListofParticles;
             
 
@@ -36,3 +36,5 @@ namespace nbsim
 } // end namespace
 
 #endif
+
+
