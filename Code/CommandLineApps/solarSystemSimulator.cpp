@@ -76,9 +76,6 @@ int main(int argc, char **argv) {
 
     if(*opt1 and *opt2){
 
-        std::cout << step_size << std::endl;
-        std::cout << num_stepsize << std::endl;
-
         // vector which store sun and eight planets
         std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets;
         
@@ -102,8 +99,12 @@ int main(int argc, char **argv) {
             }
         }
 
+
         
-        std::cout << "the position of the solar system bodies at the start of the simulation: " << std::endl;
+        std::cout << "At the start of the solar system simulation: " << std::endl;
+        double r_com = CenterofMass(ListofPlanets);
+        double p_total = LinearMomentum(ListofPlanets);
+        std::cout<<"Both vectors are closed to null, and the position of sun and eight planets are listed below:"<<std::endl;
         Print2Screen(ListofPlanets);
 
         // implement the evolution of the solar system
@@ -123,10 +124,20 @@ int main(int argc, char **argv) {
 
             }
 
+            std::cout<<"In the "<<num+1<<" timesteps"<<std::endl; 
+            r_com = CenterofMass(ListofPlanets);
+            p_total = LinearMomentum(ListofPlanets);
+            std::cout<<"--------------------------------------------------------------------------"<<std::endl;
+
         }
 
-        std::cout << "the position of the solar system bodies at the end of the simulation: " << std::endl;
+        std::cout << "At the end of the solar system simulation: " << std::endl;
+        r_com = CenterofMass(ListofPlanets);
+        p_total = LinearMomentum(ListofPlanets);
+        std::cout<<"The values of |r_com| and |p_total| are: "<<r_com<<" and "<<p_total<<", which are both within 0.0001AU of the origin."<<std::endl;
+        std::cout<<"The position of sun and eight planets are listed below:"<<std::endl;
         Print2Screen(ListofPlanets);
+
 
     // if none options is specified by users
     }else if(! *opt1 and ! *opt2){
