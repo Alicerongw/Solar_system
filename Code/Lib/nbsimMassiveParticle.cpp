@@ -61,18 +61,10 @@ namespace nbsim{
 
     void MassiveParticle::integrateTimestep(const double& timestep){
 
-        Eigen::Vector3d Velocity_ini = Velocity_;
+        Position_ = Position_ +  timestep * Velocity_;
 
         Velocity_ = Velocity_ +  timestep * Acceleration_;
-
-        Position_ = Position_ +  timestep * 0.5 * (Velocity_ + Velocity_ini);
-
-        /**std::cout<<"Timestep is : "<<timestep<<std::endl;
-        std::cout<<"Acceleration is: "<<Acceleration_[0]<<","<<Acceleration_[1]<<","<<Acceleration_[2]<<std::endl;
-        std::cout<<"Velocity is : " << Velocity_[0]<< "," << Velocity_[1] << "," << Velocity_[2]<<std::endl;
-        std::cout<<"Position is : " << Position_[0]<< "," << Position_[1] << "," << Position_[2]<<std::endl;
-        std::cout<<""<<std::endl;**/
-
+        
     }
 
         

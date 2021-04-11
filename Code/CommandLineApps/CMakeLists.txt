@@ -17,7 +17,12 @@ set(_command_line_apps
   solarSystemSimulator
 )
 
+IF (CMAKE_BUILD_TYPE STREQUAL Debug)        
+    ADD_DEFINITIONS(-DDEBUG)                            
+ENDIF()
+
 foreach(_app ${_command_line_apps})
   add_executable(${_app} ${_app}.cpp)
   target_link_libraries(${_app} ${PHAS0100ASSIGNMENT2_LIBRARIES} ${ALL_THIRD_PARTY_LIBRARIES})
 endforeach()
+

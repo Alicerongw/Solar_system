@@ -2,6 +2,8 @@
 #include "nbsimMassiveParticle.h"
 #include "nbsimSolarSystemData.ipp"
 #include <iostream>
+#include <chrono>
+
 
 // help function to add appropriate messages to screen summarising the position of the solar system bodies
 void Print2Screen(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
@@ -99,18 +101,25 @@ int main(int argc, char **argv) {
             }
         }
 
-
-        
+        //Output messages to summarise the position of the solar system at the start of simulation
         std::cout << "At the start of the solar system simulation: " << std::endl;
         double r_com = CenterofMass(ListofPlanets);
         double p_total = LinearMomentum(ListofPlanets);
         std::cout<<"Both vectors are closed to null, and the position of sun and eight planets are listed below:"<<std::endl;
         Print2Screen(ListofPlanets);
 
+
+        // benchmark the time for one year simulation
+        std::clock_t c_start = std::clock();
+        auto t_start = std::chrono::high_resolution_clock::now();
+        
+
         // implement the evolution of the solar system
+        
         for(int num = 0; num < num_stepsize; num++){
 
             // update gravitational aceleration for all bodies
+            //#pragma omp parallel for
             for(int i = 0; i < 9; i++){
 
                 ListofPlanets[i] -> calculateAcceleration();
@@ -118,25 +127,39 @@ int main(int argc, char **argv) {
             }
 
             // update the position and velocity of each body
+            //#pragma omp parallel for
             for(int j = 0; j < 9; j++){
 
                 ListofPlanets[j] -> integrateTimestep(step_size);
 
             }
 
-            std::cout<<"In the "<<num+1<<" timesteps"<<std::endl; 
-            r_com = CenterofMass(ListofPlanets);
-            p_total = LinearMomentum(ListofPlanets);
-            std::cout<<"--------------------------------------------------------------------------"<<std::endl;
+            #ifdef DEBUG
+                std::cout<<"In the "<<num+1<<" timesteps"<<std::endl; 
+                r_com = CenterofMass(ListofPlanets);
+                p_total = LinearMomentum(ListofPlanets);
+                std::cout<<"--------------------------------------------------------------------------"<<std::endl;
+            #endif
 
         }
 
+        // benchmark time
+        std::clock_t c_end = std::clock();
+        auto t_end = std::chrono::high_resolution_clock::now();
+        
+        //Output messages to summarise the position of the solar system at the end of simulation
         std::cout << "At the end of the solar system simulation: " << std::endl;
         r_com = CenterofMass(ListofPlanets);
         p_total = LinearMomentum(ListofPlanets);
         std::cout<<"The values of |r_com| and |p_total| are: "<<r_com<<" and "<<p_total<<", which are both within 0.0001AU of the origin."<<std::endl;
         std::cout<<"The position of sun and eight planets are listed below:"<<std::endl;
         Print2Screen(ListofPlanets);
+
+        // output messages about time consuming for the simulation
+        std::cout <<"CPU time used: "
+                  << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << " ms\n"
+                  << "Wall clock time passed: "
+                  << std::chrono::duration<double, std::milli>(t_end-t_start).count()<< " ms\n";
 
 
     // if none options is specified by users
