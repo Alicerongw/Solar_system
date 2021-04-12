@@ -15,8 +15,8 @@ namespace nbsim
             ~Particle();
             Eigen::Vector3d getPosition() const;
             Eigen::Vector3d getVelocity() const;
-            void setPosition(Eigen::Vector3d position);
-            void setVelocity(Eigen::Vector3d velocity);
+            void setPosition(Eigen::Vector3d position); // setter for get the value of private variables Position_
+            void setVelocity(Eigen::Vector3d velocity); // setter for get the value of private variables Velocity_
             void integrateTimeStep(Eigen::Vector3d acceleration, double timestep);
 
         private:

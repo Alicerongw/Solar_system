@@ -45,7 +45,7 @@ double CenterofMass(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofP
 // function to output total linear momentum vector the system to screen as the simulation evolves
 double LinearMomentum(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
 
-    Eigen::Vector3d p_total;
+    Eigen::Vector3d p_total(0.0,0.0,0.0);
 
     for(int i = 0; i < 9; i++){
 
@@ -68,7 +68,6 @@ int main(int argc, char **argv) {
     double step_size;
     
     CLI::Option* opt1 = app.add_option("-s,--stepsize",step_size, "argument to control the step_size"); 
-
 
     int num_stepsize;
 
@@ -115,32 +114,37 @@ int main(int argc, char **argv) {
         
 
         // implement the evolution of the solar system
-        for(int num = 0; num < num_stepsize; num++){
+        omp_set_num_threads (2);
+        
+        #pragma omp parallel
+        {
+            for(int num = 0; num < num_stepsize; num++){
 
-            // update gravitational acceleration for all bodies
-            omp_set_num_threads (2);
-            #pragma omp parallel for 
-            for(int i = 0; i < 9; i++){
+                // update gravitational acceleration for all bodies
+                #pragma omp for
+                for(int i = 0; i < 9; i++){
+                    
+                    ListofPlanets[i] -> calculateAcceleration();
+                    
+                }
+
+                // update the position and velocity of each body
+                #pragma omp for 
+                for(int j = 0; j < 9; j++){
+                    
+                    ListofPlanets[j] -> integrateTimestep(step_size);
+
+                }
                 
-                ListofPlanets[i] -> calculateAcceleration();
                 
+                #ifdef DEBUG
+                    std::cout<<"In the "<<num+1<<" timesteps"<<std::endl; 
+                    r_com = CenterofMass(ListofPlanets);
+                    p_total = LinearMomentum(ListofPlanets);
+                    std::cout<<"--------------------------------------------------------------------------"<<std::endl;
+                #endif
+
             }
-
-            // update the position and velocity of each body
-            #pragma omp parallel for 
-            for(int j = 0; j < 9; j++){
-                
-                ListofPlanets[j] -> integrateTimestep(step_size);
-
-            }
-            
-            
-            #ifdef DEBUG
-                std::cout<<"In the "<<num+1<<" timesteps"<<std::endl; 
-                r_com = CenterofMass(ListofPlanets);
-                p_total = LinearMomentum(ListofPlanets);
-                std::cout<<"--------------------------------------------------------------------------"<<std::endl;
-            #endif
 
         }
 
