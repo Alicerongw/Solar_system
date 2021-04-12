@@ -16,7 +16,7 @@ namespace nbsim{
     MassiveParticle::~MassiveParticle(){}
 
 
-    double MassiveParticle::getMu(){
+    double MassiveParticle::getMu() const{
 
         return Mu_;
 

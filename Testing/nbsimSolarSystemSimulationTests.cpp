@@ -6,12 +6,12 @@
 #include <vector>
 
 
-TEST_CASE( "Test for acceleration of particle", "[some group identifier]" ) {
+TEST_CASE( "Test for acceleration of particle", "[Particle]" ) {
 
     Eigen::Vector3d position(1.0,0.0,0.0);
     Eigen::Vector3d velocity(0.0,1.0,0.0);
     Eigen::Vector3d acceleration1(0.0,0.0,0.0);
-    Eigen::Vector3d acceleration2(2.0,2.0,2.0);
+    Eigen::Vector3d acceleration2(1.0,1.0,1.0);
 
 
     SECTION("Check particle movement when there is no acceleration"){
@@ -19,10 +19,10 @@ TEST_CASE( "Test for acceleration of particle", "[some group identifier]" ) {
         // create an instance of Particle class
         nbsim::Particle particle(position,velocity);
 
-        particle.integrateTimeStep(acceleration1, 5.0);
+        particle.integrateTimeStep(acceleration1, 0.01);
 
         // position and velocity after timestep
-        Eigen::Vector3d pos_2(1.0,5.0,0.0);
+        Eigen::Vector3d pos_2(1.0,0.01,0.0);
         Eigen::Vector3d vel_2(0.0,1.0,0.0);
 
         REQUIRE(particle.getPosition().isApprox(pos_2));
@@ -35,11 +35,11 @@ TEST_CASE( "Test for acceleration of particle", "[some group identifier]" ) {
         // create an instance of Particle class
         nbsim::Particle particle(position,velocity);
 
-        particle.integrateTimeStep(acceleration2, 5.0);
+        particle.integrateTimeStep(acceleration2, 0.01);
 
         // position and velocity after timestep
-        Eigen::Vector3d pos_2(26.0,30.0,25.0);
-        Eigen::Vector3d vel_2(10.0,11.0,10.0);
+        Eigen::Vector3d pos_2(1.0,0.01,0.0);
+        Eigen::Vector3d vel_2(0.01,1.01,0.01);
 
         REQUIRE(particle.getPosition().isApprox(pos_2));
         REQUIRE(particle.getVelocity().isApprox(vel_2));
@@ -59,8 +59,9 @@ TEST_CASE( "Test for acceleration of particle", "[some group identifier]" ) {
 
         }
 
-        REQUIRE(particle.getPosition().isApprox(position,0.01));
-        REQUIRE(particle.getVelocity().isApprox(velocity,0.01));
+       
+        REQUIRE(particle.getPosition().isApprox(position,0.02));
+        REQUIRE(particle.getVelocity().isApprox(velocity,0.02));
 
     }
 
@@ -68,7 +69,7 @@ TEST_CASE( "Test for acceleration of particle", "[some group identifier]" ) {
 
 
 
-TEST_CASE( "Test for acceleration of MassiveParticle", "[some group identifier]" ) {
+TEST_CASE( "Test for acceleration of MassiveParticle", "[MassiveParticle]" ) {
 
     Eigen::Vector3d position1(1.0,0.0,0.0);
     Eigen::Vector3d position2(-1.0,0.0,0.0);
@@ -109,11 +110,9 @@ TEST_CASE( "Test for acceleration of MassiveParticle", "[some group identifier]"
 
         double distance = sqrt((M_Particle1->getPosition() - M_Particle2->getPosition()).dot(M_Particle1->getPosition() - M_Particle2->getPosition()));
 
-        REQUIRE(distance == Approx(2.0).margin(0.1));
+        REQUIRE(distance == Approx(2.0).epsilon(0.1));
 
     }
-
-
 
 }
 

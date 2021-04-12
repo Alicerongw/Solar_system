@@ -15,7 +15,7 @@ namespace nbsim
             MassiveParticle(Eigen::Vector3d Position, Eigen::Vector3d Velocity, double Mass);
             ~MassiveParticle();
             
-            double getMu();
+            double getMu() const;
             void addAttractor(std::shared_ptr<MassiveParticle> attractor);
             void removeAttractor(std::shared_ptr<MassiveParticle> attractor);
             void calculateAcceleration();

@@ -52,7 +52,7 @@ Instruction may be like:
 
 Unit test Instructions
 ------------------
-Apart from command line app, you can also run the unit tests for this project. Instructions for unit test: **./bin/nbsimSolarSystemSimulationTest**. Or you could also simplely run **ctest** in the build directory.
+Apart from command line app, you can also run the unit tests for this project. Instructions for unit test: **./bin/nbsimSolarSystemSimulationTests**. Or you could also simplely run **ctest** in the build directory.
 
 
 
@@ -74,8 +74,27 @@ seven different timestep sizes. The detailed summary is listed below
 | 1day    | (-4.63987e-05,2.58709e-05,-5.22848e-07) |  (-2.19125e-06,1.97065e-06,-7.94825e-09) | 5.31264e-05 | 2.94706e-06 | (0.68553, 0.948918, 0.000126035)   | 0.2 ms     | 0.1966 ms |
 | 3day    | (-4.64023e-05,2.58709e-05,-5.22848e-07) |  (-2.18455e-06,1.96707e-06,-7.87578e-09) | 5.31295e-05 | 2.93967e-06 | (1.54956, -0.0257923, 0.000199878) | 0.066 ms   | 0.0627 ms |
 
-<br/>
-From previous seven different step_sizes, comparing with known position of earth after one year simulation 𝒓𝐸𝑎𝑟𝑡ℎ = (−0.194, 0.969, 0.000109), it is clear that timestep greater than 1 minute would cause significant bias for position of earth after one year's simulation. Consideing the balance between simulation run time and accuracy, the timestep setting to 1 second (0.00000003171 year) will be reasonable. 
+<br/>From previous seven different step_sizes, comparing with known position of earth after one year simulation 𝒓𝐸𝑎𝑟𝑡ℎ = (−0.194, 0.969, 0.000109), it is clear that timestep greater than 1 minute would cause significant bias for position of earth after one year's simulation. Consideing the balance between simulation run time and accuracy, the timestep setting to 1 second (0.00000003171 year) will be reasonable. <br/>
 
 
 
+OPENMP Parallelism
+------------------
+The choosed timestep is 1 second (0.00000003171 year) and the number of timestep is 31536000
+|**number of thread**|**CPU Time**|**Wall clock time**|
+| :----: | :----: | :----: |
+| no use of OPENMP  | 17935 ms  | 17935.1ms |
+| 2  |  96165 ms   | 48086.3 ms  |
+| 3  |  170699 ms  | 56906.2 ms  |
+| 4  |  272728 ms  | 68187.2 ms  |
+| 5  |  365187 ms  | 73044.3 ms  |
+| 6  |  506247 ms  | 84380.6 ms  |
+| 7  |  640087 ms  | 91443.5 ms  |
+| 8  |  782356 ms  | 97804.4 ms  |
+| 9  |  927885 ms  | 103121 ms   |
+| 10 |  1076010 ms | 107622 ms   |
+| 16 |  3601440 ms | 227071 ms   |
+
+It can be seen from above results that the running time of simulation increases as the thread increasing. In this case, Parallelism don't help to reduce the running time of the simulation.
+The main reason of this may due to that the interations in for loop are limited. For creation of each
+thread, it takes time and resources. If the running time of for loop in single thread is short, then the creation of multiple threads will have overhead and take more time than expected. Besides, switching between different threads also takes time. The result may vary between different systems.

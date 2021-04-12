@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 
     int num_stepsize;
 
-    CLI::Option* opt2 = app.add_option("-n,--number", num_stepsize, "argunment to control the number of timesteps");
+    CLI::Option* opt2 = app.add_option("-n,--number", num_stepsize, "argument to control the number of timesteps and must be an integer");
     
     CLI11_PARSE(app, argc, argv);
 
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
         // vector which store sun and eight planets
         std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets;
         
-        // initialise nine planets
+        // initialise solar system bodies
         for(int i = 0; i < 9; i++){
 
             std::shared_ptr<nbsim::MassiveParticle> M_Plant(new nbsim::MassiveParticle(nbsim::solarSystemData[i].position,nbsim::solarSystemData[i].velocity, nbsim::solarSystemData[i].mu));
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
         std::cout << "At the start of the solar system simulation: " << std::endl;
         double r_com = CenterofMass(ListofPlanets);
         double p_total = LinearMomentum(ListofPlanets);
-        std::cout<<"Both vectors are closed to null, and the position of sun and eight planets are listed below:"<<std::endl;
+        std::cout<<"Both vectors are closed to null, and the position of solar system bodies are listed below:"<<std::endl;
         Print2Screen(ListofPlanets);
 
 
@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
         for(int num = 0; num < num_stepsize; num++){
 
             // update gravitational acceleration for all bodies
-            omp_set_num_threads (18);
+            omp_set_num_threads (2);
             #pragma omp parallel for 
             for(int i = 0; i < 9; i++){
                 
@@ -154,18 +154,18 @@ int main(int argc, char **argv) {
         r_com = CenterofMass(ListofPlanets);
         p_total = LinearMomentum(ListofPlanets);
         std::cout<<"The values of |r_com| and |p_total| are: "<<r_com<<" and "<<p_total<<", which are both within 0.0001AU of the origin."<<std::endl;
-        std::cout<<"The position of sun and eight planets are listed below:"<<std::endl;
         Print2Screen(ListofPlanets);
 
         // output messages about time consuming for the simulation
         std::cout <<"CPU time used: "
-                  << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << " ms\n"
-                  << "Wall clock time passed: "
-                  << std::chrono::duration<double, std::milli>(t_end-t_start).count()<< " ms\n";
+                << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << " ms\n"
+                << "Wall clock time passed: "
+                << std::chrono::duration<double, std::milli>(t_end-t_start).count()<< " ms\n";
 
 
     // if none options is specified by users
     }else if(! *opt1 and ! *opt2){
+
         std::cout<<"Model the motion of Sun and planets in the Solar System"<<std::endl;
 
         std::cout<<"Usage: ./bin/solarSystemSimulator [OPTIONS]"<<std::endl;
