@@ -5,7 +5,6 @@
 #include <iostream>
 #include <vector>
 
-const double gravitational_constant = 6.754*pow(10,-11);
 
 TEST_CASE( "Test for acceleration of particle", "[some group identifier]" ) {
 

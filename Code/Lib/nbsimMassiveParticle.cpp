@@ -1,9 +1,8 @@
 #include "nbsimMassiveParticle.h"
 #include <math.h>
 #include <iostream>
+#include <omp.h>
 
-
-const double gravitational_constant = 6.754*pow(10,-11);
 
 namespace nbsim{
 
@@ -56,14 +55,15 @@ namespace nbsim{
         }
 
         Acceleration_ = Acceleration_copy;
+        
     }
 
 
     void MassiveParticle::integrateTimestep(const double& timestep){
 
-        Position_ = Position_ +  timestep * Velocity_;
+        setPosition(getPosition() +  timestep * getVelocity());
 
-        Velocity_ = Velocity_ +  timestep * Acceleration_;
+        setVelocity(getVelocity() +  timestep * Acceleration_);
         
     }
 

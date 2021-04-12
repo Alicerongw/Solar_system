@@ -3,7 +3,7 @@
 #include "nbsimSolarSystemData.ipp"
 #include <iostream>
 #include <chrono>
-
+#include <omp.h>
 
 // help function to add appropriate messages to screen summarising the position of the solar system bodies
 void Print2Screen(std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets){
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
         // vector which store sun and eight planets
         std::vector<std::shared_ptr<nbsim::MassiveParticle>> ListofPlanets;
         
-        // initialise nine plants
+        // initialise nine planets
         for(int i = 0; i < 9; i++){
 
             std::shared_ptr<nbsim::MassiveParticle> M_Plant(new nbsim::MassiveParticle(nbsim::solarSystemData[i].position,nbsim::solarSystemData[i].velocity, nbsim::solarSystemData[i].mu));
@@ -115,25 +115,26 @@ int main(int argc, char **argv) {
         
 
         // implement the evolution of the solar system
-        
         for(int num = 0; num < num_stepsize; num++){
 
-            // update gravitational aceleration for all bodies
-            //#pragma omp parallel for
+            // update gravitational acceleration for all bodies
+            omp_set_num_threads (18);
+            #pragma omp parallel for 
             for(int i = 0; i < 9; i++){
-
+                
                 ListofPlanets[i] -> calculateAcceleration();
-
+                
             }
 
             // update the position and velocity of each body
-            //#pragma omp parallel for
+            #pragma omp parallel for 
             for(int j = 0; j < 9; j++){
-
+                
                 ListofPlanets[j] -> integrateTimestep(step_size);
 
             }
-
+            
+            
             #ifdef DEBUG
                 std::cout<<"In the "<<num+1<<" timesteps"<<std::endl; 
                 r_com = CenterofMass(ListofPlanets);
@@ -142,6 +143,7 @@ int main(int argc, char **argv) {
             #endif
 
         }
+
 
         // benchmark time
         std::clock_t c_end = std::clock();

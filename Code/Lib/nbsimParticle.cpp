@@ -24,18 +24,26 @@ namespace nbsim{
 
     }
 
-                        
-    void Particle::integrateTimeStep(Eigen::Vector3d acceleration, double timestep){
+    void Particle::setPosition(Eigen::Vector3d position){
 
-        Eigen::Vector3d Velocity_ini = Velocity_;
+       Position_ = position;
 
-        Velocity_ = Velocity_ + acceleration * timestep;
+    }
+    
+    void Particle::setVelocity(Eigen::Vector3d velocity) {
 
-        Position_ = Position_ + (Velocity_ini + Velocity_) * 0.5 * timestep;
-
+        Velocity_ = velocity;
 
     }
 
+                        
+    void Particle::integrateTimeStep(Eigen::Vector3d acceleration, double timestep){
+
+        Position_ = Position_ + Velocity_ * timestep;
+
+        Velocity_ = Velocity_ + acceleration * timestep;
+
+    }
 
 
 }
